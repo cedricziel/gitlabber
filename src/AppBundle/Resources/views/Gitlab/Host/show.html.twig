@@ -1,0 +1,55 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <h1>Host</h1>
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ host.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ host.name }}</td>
+        </tr>
+        <tr>
+            <th>Url</th>
+            <td>{{ host.url }}</td>
+        </tr>
+        <tr>
+            <th>Token</th>
+            <td>{{ host.token }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Groups</h2>
+            <ul>
+                {% for group in host.groups %}
+                    <li>
+                        <a href="{{ path('gitlab_group_show', {'id': group.id}) }}">
+                            {{ group.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <ul>
+        <li>
+            <a href="{{ path('gitlab_host_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('gitlab_host_edit', { 'id': host.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

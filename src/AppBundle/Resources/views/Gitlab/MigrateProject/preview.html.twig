@@ -1,0 +1,22 @@
+{% extends '@App/base.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block body %}
+    <h1>Migration preview</h1>
+
+    <ul>
+        <li>Name: {{ project.nameWithNamespace }}</li>
+    </ul>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <input type="submit" class="btn btn-primary btn-block">
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

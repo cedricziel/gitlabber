@@ -1,0 +1,47 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            {% set repositories = localRepositories %}
+            {{ block('_repo_list') }}
+        </div>
+        <div class="col-md-6">
+            {% set repositories = remoteRepositories %}
+            {{ block('_repo_list') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block _repo_list %}
+<table>
+    <thead>
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for repository in repositories %}
+        <tr>
+            <td>
+                {{ repository.id }}
+            </td>
+            <td>
+                {{ repository.path_with_namespace }}
+            </td>
+            <td>
+                <a href="">Migrate</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <h1>Group</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ group.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ group.name }}</td>
+        </tr>
+        <tr>
+            <th>Path</th>
+            <td>{{ group.path }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ group.description }}</td>
+        </tr>
+        <tr>
+            <th>Visibilitylevel</th>
+            <td>{{ group.visibilityLevel }}</td>
+        </tr>
+        <tr>
+            <th>Avatarurl</th>
+            <td>{{ group.avatarUrl }}</td>
+        </tr>
+        <tr>
+            <th>Weburl</th>
+            <td>{{ group.webUrl }}</td>
+        </tr>
+        <tr>
+            <th>Remoteid</th>
+            <td>{{ group.remoteId }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Projects</h2>
+
+    <table class="table">
+        <thead>
+        <th>Name</th>
+        <th>Actions</th>
+        </thead>
+        <tbody>
+        {% for project in group.projects %}
+            <tr>
+                <td>
+                    {{ project.nameWithNamespace }}
+                </td>
+                <td>
+                    <a href="{{ path('app_gitlab_migrateproject_preview', {'project_id': project.id}) }}">Migrate</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('gitlab_group_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('gitlab_group_edit', { 'id': group.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
