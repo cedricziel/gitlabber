@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Gitlab;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -215,6 +216,27 @@ class Project
     private $host;
 
     /**
+     * @var Project
+     * @ORM\JoinColumn(name="source_project_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Gitlab\Project", inversedBy="migratedTo")
+     */
+    private $sourceProject;
+
+    /**
+     * @var Project
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Gitlab\Project", mappedBy="sourceProject")
+     */
+    private $migratedTo;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->migratedTo = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return string
@@ -234,9 +256,8 @@ class Project
 
     /**
      * @param integer $remoteId
-
      *
-*@return Project
+     * @return Project
      */
     public function setRemoteId($remoteId)
     {
@@ -255,9 +276,8 @@ class Project
 
     /**
      * @param string $description
-
      *
-*@return Project
+     * @return Project
      */
     public function setDescription($description)
     {
@@ -276,9 +296,8 @@ class Project
 
     /**
      * @param array $tagList
-
      *
-*@return Project
+     * @return Project
      */
     public function setTagList($tagList)
     {
@@ -297,9 +316,8 @@ class Project
 
     /**
      * @param boolean $public
-
      *
-*@return Project
+     * @return Project
      */
     public function setPublic($public)
     {
@@ -318,9 +336,8 @@ class Project
 
     /**
      * @param boolean $archived
-
      *
-*@return Project
+     * @return Project
      */
     public function setArchived($archived)
     {
@@ -339,9 +356,8 @@ class Project
 
     /**
      * @param integer $visibilityLevel
-
      *
-*@return Project
+     * @return Project
      */
     public function setVisibilityLevel($visibilityLevel)
     {
@@ -360,9 +376,8 @@ class Project
 
     /**
      * @param string $sshUrlToRepo
-
      *
-*@return Project
+     * @return Project
      */
     public function setSshUrlToRepo($sshUrlToRepo)
     {
@@ -381,9 +396,8 @@ class Project
 
     /**
      * @param string $httpUrlToRepo
-
      *
-*@return Project
+     * @return Project
      */
     public function setHttpUrlToRepo($httpUrlToRepo)
     {
@@ -402,9 +416,8 @@ class Project
 
     /**
      * @param string $webUrl
-
      *
-* @return Project
+     * @return Project
      */
     public function setWebUrl($webUrl)
     {
@@ -423,7 +436,6 @@ class Project
 
     /**
      * @param string $name
-
      *
      * @return Project
      */
@@ -444,7 +456,6 @@ class Project
 
     /**
      * @param string $nameWithNamespace
-
      *
      * @return Project
      */
@@ -465,7 +476,6 @@ class Project
 
     /**
      * @param string $path
-
      *
      * @return Project
      */
@@ -547,7 +557,7 @@ class Project
     /**
      * @param boolean $mergeRequestsEnabled
      *
-     *@return Project
+     * @return Project
      */
     public function setMergeRequestsEnabled($mergeRequestsEnabled)
     {
@@ -567,7 +577,7 @@ class Project
     /**
      * @param boolean $wikiEnabled
      *
-     *@return Project
+     * @return Project
      */
     public function setWikiEnabled($wikiEnabled)
     {
@@ -587,7 +597,7 @@ class Project
     /**
      * @param boolean $buildsEnabled
      *
-     *@return Project
+     * @return Project
      */
     public function setBuildsEnabled($buildsEnabled)
     {
@@ -607,7 +617,7 @@ class Project
     /**
      * @param boolean $snippetsEnabled
      *
-*@return Project
+     * @return Project
      */
     public function setSnippetsEnabled($snippetsEnabled)
     {
@@ -627,7 +637,7 @@ class Project
     /**
      * @param \DateTime $remoteCreatedAt
      *
-*@return Project
+     * @return Project
      */
     public function setRemoteCreatedAt($remoteCreatedAt)
     {
@@ -647,7 +657,7 @@ class Project
     /**
      * @param \DateTime $remoteLastActivityAt
      *
-*@return Project
+     * @return Project
      */
     public function setRemoteLastActivityAt($remoteLastActivityAt)
     {
@@ -667,7 +677,7 @@ class Project
     /**
      * @param boolean $sharedRunnersEnabled
      *
-*@return Project
+     * @return Project
      */
     public function setSharedRunnersEnabled($sharedRunnersEnabled)
     {
@@ -687,7 +697,7 @@ class Project
     /**
      * @param boolean $lfsEnabled
      *
-*@return Project
+     * @return Project
      */
     public function setLfsEnabled($lfsEnabled)
     {
@@ -707,7 +717,7 @@ class Project
     /**
      * @param integer $creatorId
      *
-*@return Project
+     * @return Project
      */
     public function setCreatorId($creatorId)
     {
@@ -727,7 +737,7 @@ class Project
     /**
      * @param string $avatarUrl
      *
-*@return Project
+     * @return Project
      */
     public function setAvatarUrl($avatarUrl)
     {
@@ -747,7 +757,7 @@ class Project
     /**
      * @param Group $group
      *
-*@return Project
+     * @return Project
      */
     public function setGroup(Group $group = null)
     {
@@ -767,12 +777,70 @@ class Project
     /**
      * @param Host $host
      *
-*@return Project
+     * @return Project
      */
     public function setHost(Host $host = null)
     {
         $this->host = $host;
 
         return $this;
+    }
+
+    /**
+     * Get sourceProject
+     *
+     * @return Project
+     */
+    public function getSourceProject()
+    {
+        return $this->sourceProject;
+    }
+
+    /**
+     * Set sourceProject
+     *
+     * @param Project $sourceProject
+     *
+     * @return Project
+     */
+    public function setSourceProject(Project $sourceProject = null)
+    {
+        $this->sourceProject = $sourceProject;
+
+        return $this;
+    }
+
+    /**
+     * Add migratedTo
+     *
+     * @param Project $migratedTo
+     *
+     * @return Project
+     */
+    public function addMigratedTo(Project $migratedTo)
+    {
+        $this->migratedTo[] = $migratedTo;
+
+        return $this;
+    }
+
+    /**
+     * Remove migratedTo
+     *
+     * @param Project $migratedTo
+     */
+    public function removeMigratedTo(Project $migratedTo)
+    {
+        $this->migratedTo->removeElement($migratedTo);
+    }
+
+    /**
+     * Get migratedTo
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMigratedTo()
+    {
+        return $this->migratedTo;
     }
 }

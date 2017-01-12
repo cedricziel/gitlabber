@@ -1,0 +1,7 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <p>Do you want to remove the source repository?</p>
+
+    <a href="{{ path('app_gitlab_project_remove', {'project_id': project.id}) }}">REMOVE</a>
+{% endblock %}
