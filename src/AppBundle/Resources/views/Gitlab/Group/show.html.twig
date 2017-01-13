@@ -55,6 +55,15 @@
                 </td>
                 <td>
                     <a href="{{ path('app_gitlab_migrateproject_preview', {'project_id': project.id}) }}">Migrate</a>
+                    -
+                    <a href="{{ project.webUrl }}">Show</a>
+                    -
+                    <a href="{{ path('app_gitlab_project_remove', {'project_id': project.id}) }}">REMOVE</a>
+                    {% if project.migratedTo | length > 0 %}
+                        - <a href="{{ path('app_gitlab_migrateproject_continue', {'target_project_id': project.migratedTo.first.id}) }}">
+                            Continue existing migration
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

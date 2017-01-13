@@ -1,0 +1,11 @@
+{% extends '@App/base.html.twig' %}
+
+{% block body %}
+    <h2>Project migrated.</h2>
+    <p><strong>How do you want to continue?</strong></p>
+    <a href="{{ path('app_gitlab_migrateproject_variables', {'target_project_id': targetProject.id}) }}">Copy Variables</a><br>
+    <a href="{{ path('app_gitlab_migrateproject_deploykeys', {'target_project_id': targetProject.id}) }}">Copy Deploy Keys</a><br>
+    <p>Do you want to remove the source repository?</p>
+    <a href="{{ path('app_gitlab_project_remove', {'project_id': sourceProject.id}) }}">Remove Project</a><br>
+{% endblock %}
+

@@ -38,6 +38,10 @@ class ProjectService
      */
     public function findOrCreateTargetProjectFromRequest(Request $request, Project $sourceProject)
     {
+        if ($sourceProject->getMigratedTo()->first()) {
+            return $sourceProject->getMigratedTo()->first();
+        }
+
         $targetHost = $this->entityManager->getRepository(Host::class)->find($request->get('host'));
         /** @var Group $targetGroup */
         $targetGroup = $this->entityManager->getRepository(Group::class)->find($request->get('group'));

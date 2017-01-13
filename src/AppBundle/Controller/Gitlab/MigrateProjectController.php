@@ -73,17 +73,16 @@ class MigrateProjectController extends Controller
         }
 
         return [
-            'form'    => $form->createView(),
+            'form' => $form->createView(),
             'project' => $project,
         ];
     }
 
     /**
      * @Route("/migrate")
-     * @Template()
      * @param Request $request
      *
-     * @return array
+     * @return Response
      */
     public function migrateAction(Request $request)
     {
@@ -94,9 +93,71 @@ class MigrateProjectController extends Controller
         $migrationProcess = new MigrationProcess($sourceProject, $targetProject);
         $migrationProcess->migrate();
 
+        return $this->redirectToRoute(
+            'app_gitlab_migrateproject_continue',
+            ['target_project_id' => $targetProject->getId()]
+        );
+    }
+
+    /**
+     * @Route("/migrate/continue")
+     * @Template()
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function continueAction(Request $request)
+    {
+        $projectRepository = $this->getDoctrine()->getRepository(Project::class);
+        $targetProject = $projectRepository->find($request->get('target_project_id'));
+        $sourceProject = $targetProject->getSourceProject();
+
         return [
-            'project' => $sourceProject,
+            'sourceProject' => $sourceProject,
+            'targetProject' => $targetProject,
         ];
+    }
+
+    /**
+     * @Route("/migrate/continue-variables")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function variablesAction(Request $request)
+    {
+        $projectRepository = $this->getDoctrine()->getRepository(Project::class);
+        $targetProject = $projectRepository->find($request->get('target_project_id'));
+        $sourceProject = $targetProject->getSourceProject();
+
+        $migration = new MigrationProcess($sourceProject, $targetProject);
+        $migration->copyVariables();
+
+        return $this->redirectToRoute(
+            'app_gitlab_migrateproject_continue',
+            ['target_project_id' => $sourceProject->getId()]
+        );
+    }
+
+    /**
+     * @Route("/migrate/continue-deploy-keys")
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function deployKeysAction(Request $request)
+    {
+        $projectRepository = $this->getDoctrine()->getRepository(Project::class);
+        $targetProject = $projectRepository->find($request->get('target_project_id'));
+        $sourceProject = $targetProject->getSourceProject();
+
+        $migration = new MigrationProcess($sourceProject, $targetProject);
+        $migration->copyDeployKeys();
+
+        return $this->redirectToRoute(
+            'app_gitlab_migrateproject_continue',
+            ['target_project_id' => $sourceProject->getId()]
+        );
     }
 
     /**

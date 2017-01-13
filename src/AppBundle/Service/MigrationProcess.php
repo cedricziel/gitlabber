@@ -48,7 +48,45 @@ class MigrationProcess
     public function migrate()
     {
         $this->syncRepository();
+        $this->copyVariables();
+        $this->copyDeployKeys();
         $this->reEnableBuilds();
+    }
+
+    public function copyVariables()
+    {
+        $sourceApi = GitlabApiFactory::fromProject($this->sourceProject);
+        $variables = $sourceApi->projects->variables($this->sourceProject->getRemoteId());
+
+        $targetApi = GitlabApiFactory::fromProject($this->targetProject);
+
+        foreach ($variables as $variable) {
+            try {
+                $targetApi->projects->addVariable(
+                    $this->targetProject->getRemoteId(),
+                    $variable['key'],
+                    $variable['value']
+                );
+            } catch (\Exception $e) {
+                // Intentionally left blank
+            }
+        }
+    }
+
+    public function copyDeployKeys()
+    {
+        $sourceApi = GitlabApiFactory::fromProject($this->sourceProject);
+        $deployKeys = $sourceApi->projects->deployKeys($this->sourceProject->getRemoteId());
+
+        $targetApi = GitlabApiFactory::fromProject($this->targetProject);
+
+        foreach ($deployKeys as $key) {
+            try {
+                $targetApi->projects->addKey($this->targetProject->getRemoteId(), $key['title'], $key['key']);
+            } catch (\Exception $e) {
+                // Intentionally left blank
+            }
+        }
     }
 
     /**
